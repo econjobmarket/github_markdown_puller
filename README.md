@@ -45,3 +45,65 @@ composer require erusev\parsedown
 ```
 which installs  [https://github.com/erusev/parsedown](https://github.com/erusev/parsedown).
 You'll need the parser to convert the page to html for display on your website.
+
+## Menus
+
+You can use the puller to create menus.  If your github repo contains directories, then you can pull the contents of the directories by using an url like
+
+```
+https://api.github.com/repos/econjobmarket/api_documentation/contents/api
+```
+If you use curl or wget with that url, it will return something that looks like
+```
+[
+  {
+    "name": "Api-Documents.0.md",
+    "path": "api/Api-Documents.0.md",
+    "sha": "65df7bd07a5ca1b61a9f0ddede998d73991e660b",
+    "size": 1445,
+    "url": "https://api.github.com/repos/econjobmarket/api_documentation/contents/api/Api-Documents.0.md?ref=master",
+    "html_url": "https://github.com/econjobmarket/api_documentation/blob/master/api/Api-Documents.0.md",
+    "git_url": "https://api.github.com/repos/econjobmarket/api_documentation/git/blobs/65df7bd07a5ca1b61a9f0ddede998d73991e660b",
+    "download_url": "https://raw.githubusercontent.com/econjobmarket/api_documentation/master/api/Api-Documents.0.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/econjobmarket/api_documentation/contents/api/Api-Documents.0.md?ref=master",
+      "git": "https://api.github.com/repos/econjobmarket/api_documentation/git/blobs/65df7bd07a5ca1b61a9f0ddede998d73991e660b",
+      "html": "https://github.com/econjobmarket/api_documentation/blob/master/api/Api-Documents.0.md"
+    }
+  },
+  {
+    "name": "Applicant-Method.4.md",
+    "path": "api/Applicant-Method.4.md",
+    "sha": "789dc443b942ce00fd53212cb8570a9401c32028",
+    "size": 1697,
+    "url": "https://api.github.com/repos/econjobmarket/api_documentation/contents/api/Applicant-Method.4.md?ref=master",
+    "html_url": "https://github.com/econjobmarket/api_documentation/blob/master/api/Applicant-Method.4.md",
+    "git_url": "https://api.github.com/repos/econjobmarket/api_documentation/git/blobs/789dc443b942ce00fd53212cb8570a9401c32028",
+    "download_url": "https://raw.githubusercontent.com/econjobmarket/api_documentation/master/api/Applicant-Method.4.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/econjobmarket/api_documentation/contents/api/Applicant-Method.4.md?ref=master",
+      "git": "https://api.github.com/repos/econjobmarket/api_documentation/git/blobs/789dc443b942ce00fd53212cb8570a9401c32028",
+      "html": "https://github.com/econjobmarket/api_documentation/blob/master/api/Applicant-Method.4.md"
+    }
+  },
+]
+```
+
+except I left out a lot of the entries to make it shorter.
+
+The puller code in the class given in this repo will return an array of php objects.
+
+Each of these objects has three relevant properies.  The first is the propery `name`,  which is `Applicant-Method.4.md` in the last item of the example above.  The name can be used at the text in a menu item created from the array  
+
+I'll explain why the 4 is there in a moment.
+
+The second property of the object is `path` which can be used to create an appropriate relative link in an url in your menu.  
+
+The third property, `type` is going to be either `file` or `directory`.  This would be used to decide how to format the menu item.
+
+On econjobmarket the way the menu item itself is display is by stripping the text `Applicant-Method.4.md` of the number and the `md`, then stripping the dash from the title to get a nice text string to display.
+
+The way the number is used is to order the markdown files (in particular using php `uasort` to reorder the items using the number in the title). 
+
