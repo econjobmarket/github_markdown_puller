@@ -21,7 +21,7 @@ class GithubMarkdownPuller {
     $error_types = array ('curl failure');
    if (array_search($error, $error_types) === false) {
      $bad = preg_replace('/[^a-zA-Z0-9_ -]/s','',$error);
-     $output = ["error" => 'unknown error', "error_description => "unknown code: $bad];
+     $output = ["error" => 'unknown error', "error_description" => "unknown code: $bad"];
      return json_encode($output);
      }
    $output = array("error" => $error, "error_description" => $error_description);
